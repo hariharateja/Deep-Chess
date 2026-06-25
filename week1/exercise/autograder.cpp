@@ -9,10 +9,21 @@ using namespace std;
 */
 
 string solve(int n, vector<long long> a) {
-    // TODO: Fill this function.
-    // Return one of: "Player 1" or "Player 2" or "Draw"
+    // dp[i] = score advantage (current player - opponent) playing optimally from index i
+    vector<long long> dp(n + 1, 0);
+    // dp[n] = 0 (base: no numbers left)
+    // dp[n-1] = a[n-1] (only one number, must take it)
+    if (n >= 1) dp[n - 1] = a[n - 1];
 
-    return "";
+    for (int i = n - 2; i >= 0; i--) {
+        long long take1 = a[i] - dp[i + 1];
+        long long take2 = a[i] + a[i + 1] - dp[i + 2];
+        dp[i] = max(take1, take2);
+    }
+
+    if (dp[0] > 0) return "Player 1";
+    if (dp[0] < 0) return "Player 2";
+    return "Draw";
 }
 
 static string trim(const string &s) {
